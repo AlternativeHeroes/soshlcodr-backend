@@ -17,10 +17,18 @@ router.post('/', function(req, res, next) {
     var lat = req.body.lat;
     var long = req.body.long;
 
+    console.log(req.body);
+
     User.find({ name: name }, function(err, result) {
-        if (result) {
+        console.log(result);
+        if (result && result.length === 1) {
+            result = result[0];
+            console.log("HI");
             result.lat = lat;
             result.long = long;
+            result.save(function(err) {
+                res.status(200).send("updated");
+            });
         } else {
             new User({ name: name, lat: lat, long: long }).save(function() {
                 res.send("saved");
